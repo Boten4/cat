@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>רישום כיבוד לאירוע</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background-color: #E6E6FA; /* רקע סגול בהיר */
+            direction: rtl; /* יישור לימין */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: right; /* יישור לימין */
+            width: 5cm; /* רוחב העמודות */
+        }
+        button {
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h2>רישום כיבוד לאירוע</h2>
+    <table id="refreshmentsTable">
+        <thead>
+            <tr>
+                <th>שם</th>
+                <th>פירוט הכיבוד</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="employeeName"></td>
+                <td><input type="text" name="refreshmentDetails"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button onclick="addRow()">הוסיפי שורה</button>
+    <button onclick="saveData()">שני נתונים</button>
+
+    <script>
+        function addRow() {
+            const table = document.getElementById('refreshmentsTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            cell1.innerHTML = '<input type="text" name="employeeName">';
+            cell2.innerHTML = '<input type="text" name="refreshmentDetails">';
+        }
+
+        function saveData() {
+            const table = document.getElementById('refreshmentsTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            const data = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const employeeName = cells[0].getElementsByTagName('input')[0].value;
+                const refreshmentDetails = cells[1].getElementsByTagName('input')[0].value;
+                data.push({ employeeName, refreshmentDetails });
+            }
+
+            localStorage.setItem('refreshmentsData', JSON.stringify(data));
+            alert('הנתונים נשמרו בהצלחה!');
+        }
+
+        window.onload = function() {
+            const savedData = localStorage.getItem('refreshmentsData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const table = document.getElementById('refreshmentsTable').getElementsByTagName('tbody')[0];
+                for (let i = 0; i < data.length; i++) {
+                    const newRow = table.insertRow();
+                    const cell1 = newRow.insertCell(0);
+                    const cell2 = newRow.insertCell(1);
+                    cell1.innerHTML = `<input type="text" name="employeeName" value="${data[i].employeeName}">`;
+                    cell2.innerHTML = `<input type="text" name="refreshmentDetails" value="${data[i].refreshmentDetails}">`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
